@@ -1,13 +1,17 @@
 const AppError = require("./AppError");
 
 class VerifyData {
-    usersInfoExists({ username, email, password}) {
-        if(!username || !email || !password) {
-            throw new AppError('Preencha todos os campos, por favor.')
+    usersInfoExists(emptyField) {
+        if (emptyField) {
+            throw new AppError('Preencha todos os campos, por favor.');
         }
+    }
 
-        return { username, email, password };
-    };
+    userAlreadyExists(email) {
+        if (email) {
+            throw new AppError('Já existe um usuário com este e-mail.');
+        }
+    }
 };
 
 module.exports = VerifyData;

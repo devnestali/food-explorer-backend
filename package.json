@@ -5,13 +5,17 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "migrate": "npx knex migrate:latest",
+    "rollback": "npx knex migrate:rollback"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
     "knex": "^3.1.0",
     "sqlite3": "^5.1.7"
   },

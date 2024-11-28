@@ -1,3 +1,5 @@
+require('express-async-errors');
+
 const express = require('express');
 const routes = require('./routes');
 
@@ -11,13 +13,13 @@ app.use(routes);
 
 app.use((error, request, response, next) => {
     if (error instanceof AppError) {
-        response.status(error.statusCode).json({
+        return response.status(error.statusCode).json({
             status: "error",
             message: error.message,
         });
     }
 
-    response.status(500).json({
+    return response.status(500).json({
         status: "error",
         message: "Ocorreu um erro interno. Por favor, entre em contato com o responsável."
     });
