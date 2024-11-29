@@ -8,14 +8,11 @@ class UserController {
     async create(request, response) {
         const { username, email, password } = request.body;
 
-        const emptyField = !username || !email || !password;
-        
-        verifyData.usersInfoExists(emptyField);        
+        const emptyField = !username || !email || !password; 
+        verifyData.userInfoExists(emptyField);        
 
-        const emailExists = await knex("users").where({ email }).first();
-        
+        const emailExists = await knex("users").where({ email }).first(); 
         verifyData.userAlreadyExists(emailExists);
-
         
         const formattedUsername = username.trim();
         const formattedEmail = email.trim();
@@ -28,8 +25,7 @@ class UserController {
         });
 
         return response.status(200).json({
-            username: formattedUsername,
-            email: formattedEmail,
+            message: 'Usuário criado com sucesso.'
         }); 
     };
 };   
