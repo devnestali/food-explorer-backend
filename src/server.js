@@ -19,6 +19,7 @@ app.use((error, request, response, next) => {
         });
     }
 
+    console.log(error);
     return response.status(500).json({
         status: "error",
         message: "Ocorreu um erro interno. Por favor, entre em contato com o responsável."
