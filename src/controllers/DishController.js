@@ -81,7 +81,7 @@ class DishController {
 
         const ingredients = await knex("dishIngredients").select("id", "dish_id", "name");
 
-        const dishWithIngredients = dishes.map((dish) => {
+        const dishesWithIngredients = dishes.map((dish) => {
             const dishIngredients = ingredients
                 .filter(ingredient => ingredient.dish_id === dish.id)
                 .map(ingredient => ingredient.name)
@@ -92,8 +92,23 @@ class DishController {
             };
         });
 
-        return response.status(200).json(dishWithIngredients);
+        return response.status(200).json(dishesWithIngredients);
     };
-}
+
+    async show(request, response) {
+        const { id } = request.params;
+
+        const dish = await knex("dish").where({ id }).first();
+
+        const ingredients = await knex("dishIngredients").where({ dish_id: id });
+
+        const dishWithIngredients = {
+            ...dish,
+            ingredients
+        };
+
+        return response.status(200).json(dishWithIngredients)
+    };
+};
 
 module.exports = DishController;
