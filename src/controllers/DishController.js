@@ -71,10 +71,29 @@ class DishController {
         await knex("dishIngredients").where({ dish_id: id}).delete();
         await knex("dishIngredients").where({ dish_id: id }).insert(formattedNewIngredients);
 
-        return response.status(201).json({
+        return response.status(200).json({
             message: 'Refeição atualizada com sucesso.'
         });
-    }
+    };
+
+    async index(request, response) {
+        const dishes = await knex("dish").select("id", "title", "description", "price");
+
+        const ingredients = await knex("dishIngredients").select("id", "dish_id", "name");
+
+        const dishWithIngredients = dishes.map((dish) => {
+            const dishIngredients = ingredients
+                .filter(ingredient => ingredient.dish_id === dish.id)
+                .map(ingredient => ingredient.name)
+
+            return {
+                ...dish,
+                ingredients: dishIngredients
+            };
+        });
+
+        return response.status(200).json(dishWithIngredients);
+    };
 }
 
 module.exports = DishController;

@@ -6,6 +6,7 @@ const DishController = require('../controllers/DishController');
 const dishController = new DishController();
 
 dishRoutes.post('/', dishController.create);
-dishRoutes.put('/:id', dishController.udpate);
+dishRoutes.put('/:id', dishController.udpate); 
+dishRoutes.get('/', dishController.index); 
 
 module.exports = dishRoutes;
