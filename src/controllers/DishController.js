@@ -33,8 +33,46 @@ class DishController {
         
         await knex("dishIngredients").insert(formattedIngredients);
 
-        return response.json({
+        return response.status(201).json({
             message: 'Refeição criada com sucesso.'
+        });
+    };
+
+    async udpate(request, response) {
+        const { id } = request.params;
+        const { newTitle, newDescription, newIngredients ,newPrice } = request.body;
+
+        const emptyField = !newTitle || !newDescription;
+        verifyData.dishInfoExists(emptyField);
+
+        const emptyIngredients = newIngredients.length <= 0 || !newIngredients.some(Boolean);
+        verifyData.ingredientsInfoExists(emptyIngredients);
+
+        const emptyPrice = newPrice <= 0 || isNaN(newPrice);
+        verifyData.priceIsEmptyAndNotANumber(emptyPrice);
+
+        const formattedNewTitle = newTitle.trim();
+        const formattedNewDescription = newDescription.trim().split(/\s+/).join(' ');
+        const formattedNewPrice = newPrice.toFixed(2);
+
+        const updatedDish = {
+            title: formattedNewTitle,
+            description: formattedNewDescription,
+            price: formattedNewPrice
+        };
+
+        await knex("dish").where({ id }).update(updatedDish);
+
+        const formattedNewIngredients = newIngredients.map((newIngredient) => ({
+            dish_id: id,
+            name: newIngredient
+        }));
+        
+        await knex("dishIngredients").where({ dish_id: id}).delete();
+        await knex("dishIngredients").where({ dish_id: id }).insert(formattedNewIngredients);
+
+        return response.status(201).json({
+            message: 'Refeição atualizada com sucesso.'
         });
     }
 }
