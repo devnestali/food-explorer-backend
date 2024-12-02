@@ -3,7 +3,7 @@ exports.up = function(knex) {
       table.increments("id");
       table.integer("dish_id").references("id").inTable("dish").onDelete("CASCADE");
       table.text("name");
-    })
+    });
   };
   
   exports.down = function(knex) {

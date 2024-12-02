@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  return knex.schema.createTable("dish", (table) => {
+  return knex.schema.createTable("dessert", table => {
     table.increments("id");
     table.text("image").defaultTo(null);
     table.text("title").notNullable();
@@ -9,5 +9,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable("dish");
+  return knex.schema.dropTable("dessert");
 };
