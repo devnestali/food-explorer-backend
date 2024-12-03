@@ -75,6 +75,25 @@ class DessertController {
             message: 'Sobremesa atualizada com sucesso.'
         });
     };
+
+    async index(request, response) {
+        const desserts = await knex("dessert");
+
+        const dessertIngredients = await knex("dessertIngredients");
+
+        const dessertsWithIngrediets = desserts.map(dessert => {
+            const dessertIngredient = dessertIngredients
+                .filter(ingredient => ingredient.dessert_id === dessert.id)
+                .map(ingredient => ingredient.name);
+                
+            return {
+                ...dessert,
+                ingredients: dessertIngredient
+            };
+        });
+
+        return response.status(200).json(dessertsWithIngrediets);
+    };
 };
 
 module.exports = DessertController;

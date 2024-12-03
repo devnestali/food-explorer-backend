@@ -7,5 +7,6 @@ const dessertController = new DessertController();
 
 dessertRoutes.post('/', dessertController.create);
 dessertRoutes.put('/:id', dessertController.update);
+dessertRoutes.get('/', dessertController.index);
 
 module.exports = dessertRoutes;
