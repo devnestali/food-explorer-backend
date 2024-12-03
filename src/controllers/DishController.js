@@ -43,7 +43,7 @@ class DishController {
 
         if(!dishVerification) {
             return verifyData.mealVerificationIfExists({ verifier: dishVerification });
-        }
+        };
         
         verifyData.infoExists({ title: newTitle, description: newDescription });
 
@@ -99,6 +99,10 @@ class DishController {
         const { id } = request.params;
 
         const dish = await knex("dish").where({ id }).first();
+
+        if(!dish) {
+            return verifyData.mealVerificationIfExists({ verifier: dish });
+        };
 
         const ingredients = await knex("dishIngredients").where({ dish_id: id });
 

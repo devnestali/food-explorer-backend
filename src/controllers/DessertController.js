@@ -34,6 +34,47 @@ class DessertController {
             message: 'Sobremesa criada com sucesso'
         });
     };
+
+    async update(request, response) {
+        const { id } = request.params;
+        const { newTitle, newDescription, newIngredients ,newPrice } = request.body;
+        
+        const dessertVerification = await knex("dessert").where({ id }).first();
+
+        if(!dessertVerification) {
+            return verifyData.mealVerificationIfExists({ verifier: dessertVerification });
+        }
+        
+        verifyData.infoExists({ title: newTitle, description: newDescription });
+
+        verifyData.ingredientsInfoExists({ ingredients: newIngredients });
+
+        verifyData.priceIsEmptyAndNotANumber({ price: newPrice });
+
+        const formattedNewTitle = newTitle.trim();
+        const formattedNewDescription = newDescription.trim().split(/\s+/).join(' ');
+        const formattedNewPrice = newPrice.toFixed(2);
+
+        const updatedDessert = {
+            title: formattedNewTitle,
+            description: formattedNewDescription,
+            price: formattedNewPrice
+        };
+
+        await knex("dessert").where({ id }).update(updatedDessert);
+
+        const formattedNewIngredients = newIngredients.map((newIngredient) => ({
+            dessert_id: id,
+            name: newIngredient
+        }));
+        
+        await knex("dessertIngredients").where({ dessert_id: id}).delete();
+        await knex("dessertIngredients").where({ dessert_id: id }).insert(formattedNewIngredients);
+
+        return response.status(200).json({
+            message: 'Sobremesa atualizada com sucesso.'
+        });
+    };
 };
 
 module.exports = DessertController;
