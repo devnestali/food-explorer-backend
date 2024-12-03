@@ -9,5 +9,6 @@ dessertRoutes.post('/', dessertController.create);
 dessertRoutes.put('/:id', dessertController.update);
 dessertRoutes.get('/', dessertController.index);
 dessertRoutes.get('/:id', dessertController.show);
+dessertRoutes.delete('/:id', dessertController.delete);
 
 module.exports = dessertRoutes;

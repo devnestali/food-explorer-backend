@@ -113,6 +113,22 @@ class DessertController {
 
         return response.status(200).json(dessertWithIngredients);
     };
+
+    async delete(request, response) {
+        const { id } = request.params;
+
+        const dessertVerification = await knex("dessert").where({ id }).first();
+
+        if(!dessertVerification) {
+            return verifyData.mealVerificationIfExists({ verifier: dessertVerification});
+        };
+
+        await knex("dessert").where({ id }).delete();
+
+        return response.status(200).json({
+            message: 'Sobremesa excluida com sucesso.'
+        })
+    }
 };
 
 module.exports = DessertController;
