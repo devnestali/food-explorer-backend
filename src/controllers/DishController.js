@@ -7,14 +7,11 @@ class DishController {
     async create(request, response) {
         const { title, description, ingredients, price} = request.body;
 
-        const emptyField = !title || !description;
-        verifyData.dishInfoExists(emptyField);
+        verifyData.infoExists(title, description);
 
-        const emptyIngredients = ingredients.length <= 0 || !ingredients.some(Boolean);
-        verifyData.ingredientsInfoExists(emptyIngredients);
+        verifyData.ingredientsInfoExists(ingredients);
 
-        const emptyPrice = price <= 0 || isNaN(price);
-        verifyData.priceIsEmptyAndNotANumber(emptyPrice);
+        verifyData.priceIsEmptyAndNotANumber(price);
 
         const formattedTitle = title.trim();
         const formattedDescription = description.trim().split(/\s+/).join(' ');
