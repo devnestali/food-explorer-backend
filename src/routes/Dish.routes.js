@@ -9,5 +9,6 @@ dishRoutes.post('/', dishController.create);
 dishRoutes.put('/:id', dishController.udpate); 
 dishRoutes.get('/', dishController.index); 
 dishRoutes.get('/:id', dishController.show); 
+dishRoutes.delete('/:id', dishController.delete); 
 
 module.exports = dishRoutes;

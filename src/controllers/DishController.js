@@ -113,6 +113,22 @@ class DishController {
 
         return response.status(200).json(dishWithIngredients)
     };
+
+    async delete(request, response) {
+        const { id } = request.params;
+
+        const dishVerification = await knex("dish").where({ id }).first();
+
+        if(!dishVerification) {
+            return verifyData.mealVerificationIfExists({ verifier: dishVerification });
+        };
+
+        await knex("dish").where({ id }).delete();
+
+        return response.status(200).json({
+            message: 'Refeição excluída com sucesso.'
+        })
+    }
 };
 
 module.exports = DishController;
