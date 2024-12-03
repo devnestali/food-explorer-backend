@@ -94,6 +94,25 @@ class DessertController {
 
         return response.status(200).json(dessertsWithIngrediets);
     };
+
+    async show(request, response) {
+        const { id } = request.params;
+
+        const dessert = await knex("dessert").where({ id }).first();
+
+        if(!dessert) {
+            return verifyData.mealVerificationIfExists({ verifier: dessert});
+        };
+
+        const dessertIngredients = await knex("dessertIngredients").where({ dessert_id: id});
+
+        const dessertWithIngredients = {
+            ...dessert,
+            ingredients: dessertIngredients.map(ingredient => ingredient.name)
+        };
+
+        return response.status(200).json(dessertWithIngredients);
+    };
 };
 
 module.exports = DessertController;
