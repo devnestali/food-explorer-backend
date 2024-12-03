@@ -7,11 +7,11 @@ class DishController {
     async create(request, response) {
         const { title, description, ingredients, price} = request.body;
 
-        verifyData.infoExists(title, description);
+        verifyData.infoExists({ title, description });
 
-        verifyData.ingredientsInfoExists(ingredients);
+        verifyData.ingredientsInfoExists({ ingredients });
 
-        verifyData.priceIsEmptyAndNotANumber(price);
+        verifyData.priceIsEmptyAndNotANumber({ price });
 
         const formattedTitle = title.trim();
         const formattedDescription = description.trim().split(/\s+/).join(' ');
@@ -38,15 +38,18 @@ class DishController {
     async udpate(request, response) {
         const { id } = request.params;
         const { newTitle, newDescription, newIngredients ,newPrice } = request.body;
+        
+        const dishVerification = await knex("dish").where({ id }).first();
 
-        const emptyField = !newTitle || !newDescription;
-        verifyData.dishInfoExists(emptyField);
+        if(!dishVerification) {
+            return verifyData.mealVerificationIfExists({ verifier: dishVerification });
+        }
+        
+        verifyData.infoExists({ title: newTitle, description: newDescription });
 
-        const emptyIngredients = newIngredients.length <= 0 || !newIngredients.some(Boolean);
-        verifyData.ingredientsInfoExists(emptyIngredients);
+        verifyData.ingredientsInfoExists({ ingredients: newIngredients });
 
-        const emptyPrice = newPrice <= 0 || isNaN(newPrice);
-        verifyData.priceIsEmptyAndNotANumber(emptyPrice);
+        verifyData.priceIsEmptyAndNotANumber({ price: newPrice });
 
         const formattedNewTitle = newTitle.trim();
         const formattedNewDescription = newDescription.trim().split(/\s+/).join(' ');

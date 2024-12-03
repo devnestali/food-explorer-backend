@@ -13,7 +13,7 @@ class VerifyData {
         }
     }
 
-    infoExists(title, description) {
+    infoExists({ title, description }) {
         const emptyField = !title || !description;
         
         if(emptyField) {
@@ -21,7 +21,7 @@ class VerifyData {
         }
     }
 
-    ingredientsInfoExists(ingredients) {
+    ingredientsInfoExists({ ingredients }) {
         const emptyIngredients = ingredients.length <= 0 || !ingredients.some(Boolean);
         
         if(emptyIngredients) {
@@ -29,11 +29,17 @@ class VerifyData {
         }
     }
 
-    priceIsEmptyAndNotANumber(price) {
+    priceIsEmptyAndNotANumber({ price }) {
         const emptyPrice = price <= 0 || isNaN(price);
         
         if(emptyPrice) {
             throw new AppError('O preço precisa ser um número maior que 0');
+        }
+    }
+
+    mealVerificationIfExists({ verifier }) {
+        if(!verifier) {
+            throw new AppError('Item não encontrado', 404);
         }
     }
 };
