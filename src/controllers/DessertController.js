@@ -1,7 +1,40 @@
+const knex = require('../database');
+
+const VerifyData = require('../utils/VerifyData');
+const verifyData = new VerifyData();
+
 class DessertController {
-    create(request, response) {
+    async create(request, response) {
+        const { title, description, ingredients, price } = request.body;
+
+        const emptyField = !title || !description;
+        verifyData.dishInfoExists(emptyField);
+
+        const emptyIngredients = ingredients.length <= 0 || !ingredients.some(Boolean);
+        verifyData.ingredientsInfoExists(emptyIngredients);
+
+        const emptyPrice = price <= 0 || isNaN(price);
+        verifyData.priceIsEmptyAndNotANumber(emptyPrice);
+
+        const formattedTitle = title.trim();
+        const formattedDescription = description.trim().split(/\s+/). join(' ');
+        const formattedPrice = price.toFixed(2);
+        
+        const dessert_id = await knex("dessert").insert({
+            title: formattedTitle,
+            description: formattedDescription,
+            price: formattedPrice,
+        });
+
+        const formattedIngredients = ingredients.map((ingredient) => ({
+            dessert_id: dessert_id[0],
+            name: ingredient,
+        }))
+
+        await knex("dessertIngredients").insert(formattedIngredients);
+        
         return response.status(201).json({
-            message: "requisição funcionando."
+            message: 'Sobremesa criada com sucesso'
         });
     };
 };
