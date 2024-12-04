@@ -94,6 +94,25 @@ class DrinkController {
 
         return response.status(200).json(drinksWithIngredients);
     };
+
+    async show(request, response) {
+        const { id } = request.params;
+
+        const drink = await knex("drink").where({ id }).first();
+
+        if(!drink) {
+            return verifyData.mealVerificationIfExists({ verifier: drink });
+        };
+
+        const ingredients = await knex("drinkIngredients").where({ drink_id: id });
+
+        const drinkWithIngredients = {
+            ...drink,
+            ingredients
+        };
+
+        return response.status(200).json(drinkWithIngredients);
+    }
 };
 
 module.exports = DrinkController;
