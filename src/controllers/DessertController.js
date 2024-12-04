@@ -127,8 +127,8 @@ class DessertController {
 
         return response.status(200).json({
             message: 'Sobremesa excluida com sucesso.'
-        })
-    }
+        });
+    };
 };
 
 module.exports = DessertController;
