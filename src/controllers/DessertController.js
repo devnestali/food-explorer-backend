@@ -43,7 +43,7 @@ class DessertController {
 
         if(!dessertVerification) {
             return verifyData.mealVerificationIfExists({ verifier: dessertVerification });
-        }
+        };
         
         verifyData.infoExists({ title: newTitle, description: newDescription });
 

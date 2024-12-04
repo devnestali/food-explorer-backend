@@ -74,7 +74,26 @@ class DrinkController {
         return response.status(200).json({
             message: 'Bebida atualizada com sucesso.'
         });
-    }
+    };
+
+    async index(request, response) {
+        const drinks = await knex("drink").select("id", "title", "description", "price");
+
+        const ingredients = await knex("drinkIngredients").select("id", "drink_id", "name");
+
+        const drinksWithIngredients = drinks.map((drink) => {
+            const drinkIngredients = ingredients
+               .filter(ingredient => ingredient.drink_id === drink.id)
+               .map(ingredient => ingredient.name);
+
+            return {
+                ...drink,
+                ingredients: drinkIngredients
+            };
+        });
+
+        return response.status(200).json(drinksWithIngredients);
+    };
 };
 
 module.exports = DrinkController;

@@ -111,7 +111,7 @@ class DishController {
             ingredients
         };
 
-        return response.status(200).json(dishWithIngredients)
+        return response.status(200).json(dishWithIngredients);
     };
 
     async delete(request, response) {
@@ -127,8 +127,8 @@ class DishController {
 
         return response.status(200).json({
             message: 'Refeição excluída com sucesso.'
-        })
-    }
+        });
+    };
 };
 
 module.exports = DishController;
