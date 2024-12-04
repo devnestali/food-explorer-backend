@@ -34,6 +34,47 @@ class DrinkController {
             message: 'Bebida criada com sucesso.'
         });
     };
+
+    async update(request, response) {
+        const { id } = request.params;
+        const { newTitle, newDescription, newIngredients, newPrice } = request.body;
+
+        const drinkVerification = await knex("drink").where({ id }).first();
+
+        if(!drinkVerification) {
+            return verifyData.mealVerificationIfExists({ verifier: drinkVerification });
+        };
+        
+        verifyData.infoExists({ title: newTitle, description: newDescription });
+
+        verifyData.ingredientsInfoExists({ ingredients: newIngredients });
+
+        verifyData.priceIsEmptyAndNotANumber({ price: newPrice });
+
+        const formattedNewTitle = newTitle.trim();
+        const formattedNewDescription = newDescription.trim().split(/\s+/).join(' ');
+        const formattedNewPrice = newPrice.toFixed(2);
+
+        const updatedDrink = {
+            title: formattedNewTitle,
+            description: formattedNewDescription,
+            price: formattedNewPrice
+        };
+
+        await knex("drink").where({ id }).update(updatedDrink);
+
+        const formattedNewIngredients = newIngredients.map((newIngredient) => ({
+            drink_id: id,
+            name: newIngredient
+        }));
+        
+        await knex("drinkIngredients").where({ drink_id: id}).delete();
+        await knex("drinkIngredients").where({ drink_id: id }).insert(formattedNewIngredients);
+
+        return response.status(200).json({
+            message: 'Bebida atualizada com sucesso.'
+        });
+    }
 };
 
 module.exports = DrinkController;
