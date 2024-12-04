@@ -26,7 +26,7 @@ class DessertController {
         const formattedIngredients = ingredients.map((ingredient) => ({
             dessert_id: dessert_id[0],
             name: ingredient,
-        }))
+        }));
 
         await knex("dessertIngredients").insert(formattedIngredients);
         
