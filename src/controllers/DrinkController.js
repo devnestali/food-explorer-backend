@@ -112,7 +112,24 @@ class DrinkController {
         };
 
         return response.status(200).json(drinkWithIngredients);
-    }
+    };
+
+    async delete(request, response) {
+        const { id } = request.params;
+
+        const drinkVerification = await knex("drink").where({ id }).first();
+
+        if(!drinkVerification) {
+            return verifyData.mealVerificationIfExists({ verifier: drinkVerification });
+        };
+
+        await knex("drink").where({ id }).delete();
+
+        return response.status(200).json({
+            message: 'Bebida excluída com sucesso.'
+        });
+    };
+        
 };
 
 module.exports = DrinkController;
