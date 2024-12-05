@@ -4,7 +4,7 @@ const express = require('express');
 const routes = require('./routes');
 
 const path = require('path');
-const uploadConfig = require('./configs/multerConfig');
+const multerConfig = require('./configs/multerConfig');
 
 const AppError = require('./utils/AppError');
 
@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static(uploadConfig.UPLOAD_FOLDER))
+app.use(express.static(multerConfig.UPLOAD_FOLDER));
 
 app.use(routes);
 
