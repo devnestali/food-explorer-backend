@@ -16,7 +16,7 @@ class DishController {
         const formattedTitle = title.trim();
         const formattedDescription = description.trim().split(/\s+/).join(' ');
         const formattedPrice = price.toFixed(2);
-        
+
         const dish_id = await knex("dish").insert({
             title: formattedTitle,
             description: formattedDescription,
