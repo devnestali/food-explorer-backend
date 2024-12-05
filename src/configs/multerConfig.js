@@ -1,25 +1,25 @@
 const multer = require('multer');
 const path = require('path');
 
-const UPLOAD_FOLDER = path.resolve(__dirname, "..", "..", "uploads");
+const TMP_FOLDER = path.resolve(__dirname, "..", "..", "tmp");
+const UPLOAD_FOLDER = path.resolve(TMP_FOLDER, "uploads");
 
-const storage = multer.diskStorage({
-    destination: (req, res, cb) => {
-        cb(null, UPLOAD_FOLDER);
-    },
+const MULTER = {
+    storage: multer.diskStorage({
+        destination: UPLOAD_FOLDER,
     
-    filename: (req, file, cb) => {
-        const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        const fileExtension = path.extname(file.originalname);
-        cb(null, `${file.fieldname}-${fileExtension}-${uniqueFilename}`)
-    }
-});
+        filename: (req, file, cb) => {
+            const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+            const fileExtension = path.extname(file.originalname);
+            const fileName = `${file.fieldname}-${fileExtension}-${uniqueFilename}`;
+            
+            return cb(null, fileName)
+        },
+    }),
+};
 
-const upload = multer({
-    storage,
-    limits: {
-        fieldSize: 2 * 1024 * 1024,
-    },
-});
-
-module.exports = upload;
+module.exports = {
+    MULTER,
+    UPLOAD_FOLDER,
+    TMP_FOLDER,
+};
