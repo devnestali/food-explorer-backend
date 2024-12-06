@@ -54,6 +54,12 @@ class VerifyData {
             throw new AppError('Item não encontrado', 404);
         }
     }
+
+    tokenVerification({ token }) {
+        if(!token) {
+            throw new AppError('JWT Token não informado', 401);
+        }
+    }
 };
 
 module.exports = VerifyData;
