@@ -13,6 +13,18 @@ class VerifyData {
         }
     }
 
+    sessionEmailVerification(user) {
+        if (!user) {
+            throw new AppError('e-mail e/ou senha incorreta.', 401);
+        }
+    }
+
+    sessionPasswordVerification({ password }) {
+        if(!password) {
+            throw new AppError('e-mail e/ou senha incorreta.', 401);
+        }
+    }
+
     infoExists({ title, description }) {
         const emptyField = !title || !description;
         
