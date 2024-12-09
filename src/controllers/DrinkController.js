@@ -3,6 +3,9 @@ const knex = require('../database');
 const VerifyData = require('../utils/VerifyData');
 const verifyData = new VerifyData();
 
+const DiskStorage = require('../providers/DiskStorage');
+const diskStorage = new DiskStorage();
+
 class DrinkController {
     async create(request, response) {
         const { title, description, ingredients, price } = request.body;
@@ -129,6 +132,29 @@ class DrinkController {
             message: 'Bebida excluída com sucesso.'
         });
     };
+
+    async updateImage(request, response) {
+        const { id } = request.params;
+        const imageFilename = request.file.filename;
+
+        const drink = await knex("drink").where({ id }).first();
+
+        if(!drink) {
+            return verifyData.mealVerificationIfExists({ verifier: drink });
+        };
+
+        if(drink.image) {
+            await diskStorage.deleteFile(drink.image);
+        };
+
+        const file = await diskStorage.saveFile(imageFilename);
+
+        drink.image = file;
+
+        await knex("drink").where({ id }).update(drink);
+
+        return response.status(200).json(drink);
+    }
         
 };
 
