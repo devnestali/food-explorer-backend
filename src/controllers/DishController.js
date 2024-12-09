@@ -3,6 +3,9 @@ const verifyData = new VerifyData();
 
 const knex = require('../database');
 
+const DiskStorage = require('../providers/DiskStorage');
+const diskStorage = new DiskStorage();
+
 class DishController {
     async create(request, response) {
         const { title, description, ingredients, price} = request.body;
@@ -129,6 +132,25 @@ class DishController {
             message: 'Refeição excluída com sucesso.'
         });
     };
+
+    async updateImage(request, response) {
+        const { id } = request.params;
+        const imageFilename = request.file.filename;
+
+        const dish = await knex("dish").where({ id }).first();
+
+        if(dish.image) {
+            await diskStorage.deleteFile(dish.image);
+        }
+
+        const file = await diskStorage.saveFile(imageFilename);
+
+        dish.image = file;
+
+        await knex("dish").update(dish).where({ id });
+
+        return response.status(200).json(dish);
+    }
 };
 
 module.exports = DishController;
