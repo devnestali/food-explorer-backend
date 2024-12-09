@@ -3,6 +3,9 @@ const knex = require('../database');
 const VerifyData = require('../utils/VerifyData');
 const verifyData = new VerifyData();
 
+const DiskStorage = require('../providers/DiskStorage');
+const diskStorage = new DiskStorage();
+
 class DessertController {
     async create(request, response) {
         const { title, description, ingredients, price } = request.body;
@@ -129,6 +132,25 @@ class DessertController {
             message: 'Sobremesa excluida com sucesso.'
         });
     };
+
+    async updateImage(request, response) {
+        const { id } = request.params;
+        const imageFilename = request.file.filename;
+        
+        const dessert = await knex("dessert").where({ id }).first();
+
+        if(dessert.image) {
+            await diskStorage.deleteFile(dessert.image);
+        }
+
+        const file = await diskStorage.saveFile(imageFilename);
+
+        dessert.image = file;
+
+        await knex("dessert").update(dessert).where({ id });
+
+        return response.status(200).json(dessert);
+    }
 };
 
 module.exports = DessertController;
