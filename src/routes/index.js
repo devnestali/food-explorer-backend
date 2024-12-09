@@ -12,8 +12,8 @@ const routes = Router();
 
 routes.use('/users', userRoutes);
 routes.use('/dish', authenticateUser, dishRoutes);
-routes.use('/dessert', dessertRoutes);
-routes.use('/drink', drinkRoutes);
+routes.use('/dessert', authenticateUser, dessertRoutes);
+routes.use('/drink', authenticateUser, drinkRoutes);
 routes.use('/session', sessionRoutes);
 
 module.exports = routes;

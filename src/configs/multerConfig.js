@@ -11,7 +11,7 @@ const MULTER = {
         filename: (req, file, cb) => {
             const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
             const fileExtension = path.extname(file.originalname);
-            const fileName = `${file.fieldname}-${fileExtension}-${uniqueFilename}`;
+            const fileName = `${uniqueFilename}-${file.fieldname}${fileExtension}`;
             
             return cb(null, fileName)
         },
