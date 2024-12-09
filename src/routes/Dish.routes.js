@@ -14,9 +14,6 @@ dishRoutes.put('/:id', dishController.udpate);
 dishRoutes.get('/', dishController.index); 
 dishRoutes.get('/:id', dishController.show); 
 dishRoutes.delete('/:id', dishController.delete); 
-dishRoutes.patch('/file', upload.single('file'), (request, response) => {
-    console.log(request.file.filename);
-    response.status(200).json();
-});
+dishRoutes.patch('/file/:id', upload.single('file'), dishController.updateImage);
 
 module.exports = dishRoutes;

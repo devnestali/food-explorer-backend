@@ -6,7 +6,7 @@ const UPLOAD_FOLDER = path.resolve(TMP_FOLDER, "uploads");
 
 const MULTER = {
     storage: multer.diskStorage({
-        destination: UPLOAD_FOLDER,
+        destination: TMP_FOLDER,
     
         filename: (req, file, cb) => {
             const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
