@@ -38,7 +38,7 @@ class DishController {
         });
     };
 
-    async udpate(request, response) {
+    async update(request, response) {
         const { id } = request.params;
         const { newTitle, newDescription, newIngredients ,newPrice } = request.body;
         
