@@ -27,7 +27,9 @@ class SessionController {
         const token = sign(payload, secret, { expiresIn });
         
         const authorizedUser = {
-            ...user,
+            userInfo: {
+                ...user,
+            },
             token
         };
 
