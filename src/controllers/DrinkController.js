@@ -80,9 +80,9 @@ class DrinkController {
     };
 
     async index(request, response) {
-        const drinks = await knex("drink").select("id", "title", "description", "price");
+        const drinks = await knex("drink");
 
-        const ingredients = await knex("drinkIngredients").select("id", "drink_id", "name");
+        const ingredients = await knex("drinkIngredients");
 
         const drinksWithIngredients = drinks.map((drink) => {
             const drinkIngredients = ingredients
@@ -107,11 +107,11 @@ class DrinkController {
             return verifyData.mealVerificationIfExists({ verifier: drink });
         };
 
-        const ingredients = await knex("drinkIngredients").where({ drink_id: id });
+        const DrinkIngredients = await knex("drinkIngredients").where({ drink_id: id });
 
         const drinkWithIngredients = {
             ...drink,
-            ingredients
+            ingredients: DrinkIngredients.map(ingredient => ingredient.name)
         };
 
         return response.status(200).json(drinkWithIngredients);
