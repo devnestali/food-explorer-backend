@@ -9,12 +9,13 @@ const diskStorage = new DiskStorage();
 class DessertController {
     async create(request, response) {
         const { title, description, ingredients, price } = request.body;
+        console.log()
+        
+        verifyData.infoExists({ title, description });
+        
+        verifyData.ingredientsInfoExists({ ingredients });
 
-        verifyData.infoExists(title, description);
-
-        verifyData.ingredientsInfoExists(ingredients);
-
-        verifyData.priceIsEmptyAndNotANumber(price);
+        verifyData.priceIsEmptyAndNotANumber({ price });
 
         const formattedTitle = title.trim();
         const formattedDescription = description.trim().split(/\s+/). join(' ');
@@ -84,7 +85,7 @@ class DessertController {
 
         const dessertIngredients = await knex("dessertIngredients");
 
-        const dessertsWithIngrediets = desserts.map(dessert => {
+        const dessertsWithIngredients = desserts.map(dessert => {
             const dessertIngredient = dessertIngredients
                 .filter(ingredient => ingredient.dessert_id === dessert.id)
                 .map(ingredient => ingredient.name);
@@ -95,7 +96,7 @@ class DessertController {
             };
         });
 
-        return response.status(200).json(dessertsWithIngrediets);
+        return response.status(200).json(dessertsWithIngredients);
     };
 
     async show(request, response) {
