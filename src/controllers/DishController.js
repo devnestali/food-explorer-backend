@@ -8,7 +8,7 @@ const diskStorage = new DiskStorage();
 
 class DishController {
     async create(request, response) {
-        const { title, description, ingredients, price} = request.body;
+        const { title, description, ingredients, price } = request.body;
 
         verifyData.infoExists({ title, description });
 
@@ -34,13 +34,13 @@ class DishController {
         await knex("dishIngredients").insert(formattedIngredients);
 
         return response.status(201).json({
-            message: 'Refeição criada com sucesso.'
+            message: 'Refeição criada com sucesso.',
         });
     };
 
     async update(request, response) {
         const { id } = request.params;
-        const { newTitle, newDescription, newIngredients ,newPrice } = request.body;
+        const { newTitle, newDescription, newIngredients, newPrice } = request.body;
         
         const dishVerification = await knex("dish").where({ id }).first();
 
@@ -80,9 +80,9 @@ class DishController {
     };
 
     async index(request, response) {
-        const dishes = await knex("dish").select("id", "title", "description", "price");
+        const dishes = await knex("dish");
 
-        const ingredients = await knex("dishIngredients").select("id", "dish_id", "name");
+        const ingredients = await knex("dishIngredients");
 
         const dishesWithIngredients = dishes.map((dish) => {
             const dishIngredients = ingredients
@@ -107,11 +107,11 @@ class DishController {
             return verifyData.mealVerificationIfExists({ verifier: dish });
         };
 
-        const ingredients = await knex("dishIngredients").where({ dish_id: id });
+        const dishIngredients = await knex("dishIngredients").where({ dish_id: id });
 
         const dishWithIngredients = {
             ...dish,
-            ingredients
+            ingredients: dishIngredients.map(ingredient => ingredient.name)
         };
 
         return response.status(200).json(dishWithIngredients);
