@@ -5,6 +5,8 @@ exports.up = function(knex) {
     table.text("title").notNullable();
     table.text("description").notNullable();
     table.decimal("price", 8, 2).notNullable();
+    table.string("type").defaultTo("drink");
+    table.check("type = 'drink'");
   });
 };
 
