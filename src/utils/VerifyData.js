@@ -60,6 +60,12 @@ class VerifyData {
             throw new AppError('JWT Token não informado', 401);
         }
     }
+
+    typeInvalid({ type }) {
+        if(!type) {
+            throw new AppError('Tipo invalido', 401);
+        }
+    }
 };
 
 module.exports = VerifyData;
