@@ -80,7 +80,13 @@ class DrinkController {
     };
 
     async index(request, response) {
-        const drinks = await knex("drink");
+        const { title } = request.query;
+        
+        const drinks = await knex("drink").modify(queryBuilder => {
+            if (title) {
+                queryBuilder.whereLike("title", `%${title}%`);
+            }
+        });
 
         const ingredients = await knex("drinkIngredients");
 
