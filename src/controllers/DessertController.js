@@ -81,7 +81,13 @@ class DessertController {
     };
 
     async index(request, response) {
-        const desserts = await knex("dessert");
+        const { title } = request.query;
+        
+        const desserts = await knex("dessert").modify(queryBuilder => {
+            if (title) {
+                queryBuilder.whereLike("title", `%${title}%`);
+            }
+        });
 
         const dessertIngredients = await knex("dessertIngredients");
 
