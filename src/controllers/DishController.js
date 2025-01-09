@@ -8,7 +8,7 @@ const diskStorage = new DiskStorage();
 
 class DishController {
     async create(request, response) {
-        const { title, description, ingredients, price } = request.body;
+        const { title, description, ingredients, price, type } = request.body;
 
         verifyData.infoExists({ title, description });
 
@@ -18,16 +18,16 @@ class DishController {
 
         const formattedTitle = title.trim();
         const formattedDescription = description.trim().split(/\s+/).join(' ');
-        const formattedPrice = price.toFixed(2);
+        const formattedPrice = parseFloat(price).toFixed(2);
 
-        const dish_id = await knex("dish").insert({
+        const mealId = await knex("dish").insert({
             title: formattedTitle,
             description: formattedDescription,
             price: formattedPrice,
         });
 
         const formattedIngredients = ingredients.map((ingredient) => ({
-            dish_id: dish_id[0],
+            dish_id: mealId[0],
             name: ingredient,
         }));
         
@@ -35,6 +35,8 @@ class DishController {
 
         return response.status(201).json({
             message: 'Refeição criada com sucesso.',
+            mealId,
+            type
         });
     };
 

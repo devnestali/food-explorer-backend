@@ -8,8 +8,7 @@ const diskStorage = new DiskStorage();
 
 class DessertController {
     async create(request, response) {
-        const { title, description, ingredients, price } = request.body;
-        console.log()
+        const { title, description, ingredients, price, type } = request.body;
         
         verifyData.infoExists({ title, description });
         
@@ -19,29 +18,31 @@ class DessertController {
 
         const formattedTitle = title.trim();
         const formattedDescription = description.trim().split(/\s+/). join(' ');
-        const formattedPrice = price.toFixed(2);
+        const formattedPrice = parseFloat(price).toFixed(2);
         
-        const dessert_id = await knex("dessert").insert({
+        const mealId = await knex("dessert").insert({
             title: formattedTitle,
             description: formattedDescription,
             price: formattedPrice,
         });
 
         const formattedIngredients = ingredients.map((ingredient) => ({
-            dessert_id: dessert_id[0],
+            dessert_id: mealId[0],
             name: ingredient,
         }));
 
         await knex("dessertIngredients").insert(formattedIngredients);
         
         return response.status(201).json({
-            message: 'Sobremesa criada com sucesso'
+            message: 'Sobremesa criada com sucesso',
+            mealId,
+            type
         });
     };
 
     async update(request, response) {
         const { id } = request.params;
-        const { newTitle, newDescription, newIngredients ,newPrice } = request.body;
+        const { newTitle, newDescription, newIngredients, newPrice } = request.body;
         
         const dessertVerification = await knex("dessert").where({ id }).first();
 
@@ -57,7 +58,7 @@ class DessertController {
 
         const formattedNewTitle = newTitle.trim();
         const formattedNewDescription = newDescription.trim().split(/\s+/).join(' ');
-        const formattedNewPrice = newPrice.toFixed(2);
+        const formattedNewPrice = parseFloat(newPrice).toFixed(2);
 
         const updatedDessert = {
             title: formattedNewTitle,
