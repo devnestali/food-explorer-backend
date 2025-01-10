@@ -7,6 +7,7 @@ exports.up = function(knex) {
     table.decimal("price", 8, 2).notNullable();
     table.string("type").defaultTo("dish");
     table.check("type = 'dish'");
+    table.string("url");
   });
 };
 
