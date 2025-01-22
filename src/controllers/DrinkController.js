@@ -8,7 +8,7 @@ const diskStorage = new DiskStorage();
 
 class DrinkController {
     async create(request, response) {
-        const { title, description, ingredients, price, type } = request.body;
+        const { title, description, ingredients, price, type, url } = request.body;
 
         verifyData.infoExists({ title, description });
 
@@ -36,7 +36,8 @@ class DrinkController {
         return response.status(201).json({
             message: 'Bebida criada com sucesso.',
             mealId,
-            type
+            type,
+            url
         });
     };
 

@@ -8,7 +8,7 @@ const diskStorage = new DiskStorage();
 
 class DessertController {
     async create(request, response) {
-        const { title, description, ingredients, price, type } = request.body;
+        const { title, description, ingredients, price, type, url } = request.body;
         
         verifyData.infoExists({ title, description });
         
@@ -36,7 +36,8 @@ class DessertController {
         return response.status(201).json({
             message: 'Sobremesa criada com sucesso',
             mealId,
-            type
+            type,
+            url
         });
     };
 
